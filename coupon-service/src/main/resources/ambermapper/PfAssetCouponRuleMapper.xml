@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.losermapper.PfAssetCouponRuleMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.PfAssetCouponRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="coin" jdbcType="VARCHAR" property="coin" />
+    <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+    <result column="expire_rule_id" jdbcType="BIGINT" property="expireRuleId" />
+    <result column="amount" jdbcType="NUMERIC" property="amount" />
+    <result column="min_subscribe_days" jdbcType="INTEGER" property="minSubscribeDays" />
+    <result column="activate_condition" jdbcType="INTEGER" property="activateCondition" />
+    <result column="allow_transfer" jdbcType="BIT" property="allowTransfer" />
+    <result column="min_required_amount" jdbcType="NUMERIC" property="minRequiredAmount" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="asset_coin" jdbcType="VARCHAR" property="assetCoin" />
+  </resultMap>
+</mapper>

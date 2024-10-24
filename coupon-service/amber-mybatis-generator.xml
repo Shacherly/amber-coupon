@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="PgSql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value=""/>
+        <property name="endingDelimiter" value=""/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.trading.backend.common.mapper.BaseMapper"/>
+            <!--<property name="useMapperCommentGenerator" value="false"/>-->
+            <property name="lombok" value="Data,Accessors"/>
+        </plugin>
+        <plugin type="com.trading.backend.common.plugin.SlefModelPlugin">
+            <property name="useKeySql" value="true"/>
+            <property name="seq_prefix" value = "SEQ_"/>
+            <property name="seq_suffix" value=""/>
+        </plugin>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection
+                driverClass="org.postgresql.Driver"
+                connectionURL="jdbc:postgresql://172.24.247.95:5432/trading"
+                userId="readwrite"
+                password=".whn_E2D5*)z.h"/>
+        <javaTypeResolver type="com.trading.backend.common.type.SelfTypeResolver">
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="com.trading.backend.coupon.domain" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="tradingmapper" targetProject="src/main/resources"/>
+        <javaClientGenerator targetPackage="com.trading.backend.coupon.tradingmapper" targetProject="src/main/java" type="XMLMAPPER"/>
+
+        <table tableName="pf_coupon_activity_info">
+            <!--<generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+        </table>
+        <!--<table tableName="pf_coupon_reward_detail">
+            &lt;!&ndash;<generatedKey column="id" sqlStatement="JDBC" identity="true"/>&ndash;&gt;
+        </table>-->
+        <!--<table tableName="pf_deduct_coupon_rule">
+            &lt;!&ndash;<generatedKey column="id" sqlStatement="JDBC" identity="true"/>&ndash;&gt;
+        </table>
+        <table tableName="pf_interest_coupon_rule">
+            &lt;!&ndash;<generatedKey column="id" sqlStatement="JDBC" identity="true"/>&ndash;&gt;
+        </table>-->
+    </context>
+</generatorConfiguration>

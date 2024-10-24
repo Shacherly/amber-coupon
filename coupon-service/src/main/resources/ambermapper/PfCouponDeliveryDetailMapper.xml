@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.losermapper.PfCouponDeliveryDetailMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.PfCouponDeliveryDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="relate_coupon_id" jdbcType="BIGINT" property="relateCouponId" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="receive_type" jdbcType="INTEGER" property="receiveType" />
+    <result column="receive_way" jdbcType="INTEGER" property="receiveWay" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
+    <result column="updated_time" jdbcType="BIGINT" property="updatedTime" />
+    <result column="expire_time" jdbcType="BIGINT" property="expireTime" />
+    <result column="effective_time" jdbcType="BIGINT" property="effectiveTime" />
+    <result column="use_time" jdbcType="BIGINT" property="useTime" />
+    <result column="relate_activity_id" jdbcType="BIGINT" property="relateActivityId" />
+    <result column="has_read" jdbcType="BIT" property="hasRead" />
+    <result column="button_status" jdbcType="INTEGER" property="buttonStatus" />
+    <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
+    <result column="business_side" jdbcType="SMALLINT" property="businessSide" />
+  </resultMap>
+</mapper>

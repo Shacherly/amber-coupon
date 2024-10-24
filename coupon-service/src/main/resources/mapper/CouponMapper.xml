@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.CouponMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.Coupon">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="descr" jdbcType="VARCHAR" property="descr" />
+    <result column="overlay" jdbcType="BIT" property="overlay" />
+    <result column="total" jdbcType="BIGINT" property="total" />
+    <result column="issue" jdbcType="BIGINT" property="issue" />
+    <result column="possess_limit" jdbcType="INTEGER" property="possessLimit" />
+    <result column="expr_in_days" jdbcType="INTEGER" property="exprInDays" />
+    <result column="expr_at_start" jdbcType="TIMESTAMP" property="exprAtStart" />
+    <result column="expr_at_end" jdbcType="TIMESTAMP" property="exprAtEnd" />
+    <result column="pre_lock" jdbcType="BIGINT" property="preLock" />
+    <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl" />
+    <result column="rule" jdbcType="OTHER" property="rule" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="worth_coin" jdbcType="VARCHAR" property="worthCoin" />
+    <result column="worth" jdbcType="NUMERIC" property="worth" />
+    <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="grant_approval" jdbcType="BIT" property="grantApproval" />
+  </resultMap>
+
+
+    <resultMap id="CouponRuleDO" type="com.trading.backend.pojo.CouponRuleDO">
+        <id column="id" jdbcType="BIGINT" property="couponId" />
+        <id column="apply_scene" jdbcType="BIGINT" property="applyScene" />
+        <result column="rule" jdbcType="OTHER" property="couponRule" />
+    </resultMap>
+
+    <insert id="batchInsert">
+        INSERT INTO coupon
+        (id, name, title, status, type, descr, overlay, ctime, utime,
+        total, possess_limit, expr_in_days, expr_at_start, expr_at_end,
+        remark, redirect_url, apply_scene)
+        VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.id}, #{item.name}, #{item.title}, #{item.status}, #{item.type}, #{item.descr}, #{item.overlay}, #{item.ctime}, #{item.utime},
+            #{item.total}, #{item.possessLimit}, #{item.exprInDays}, #{item.exprAtStart}, #{item.exprAtEnd},
+            #{item.remark}, #{item.redirectUrl}, #{item.applyScene})
+        </foreach>
+    </insert>
+
+    <insert id="batchUpdate">
+        UPDATE coupon SET
+        rule = COALESCE(entity.rule::jsonb, '{}'::jsonb),
+        worth = entity.worth,
+        worth_coin = entity.worthCoin,
+        apply_scene = entity.applyScene
+        FROM (VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.id}, #{item.rule}, #{item.worth}, #{item.worthCoin}, #{item.applyScene})
+        </foreach>) AS entity(id, rule, worth, worthCoin, applyScene) WHERE coupon.id = entity.id
+    </insert>
+
+    <select id="getRulesOnly" resultMap="CouponRuleDO">
+        SELECT id, apply_scene, rule FROM coupon WHERE id IN
+        <foreach close=")" collection="couponIds" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="issuesUpdate">
+        UPDATE coupon SET issue = issue + #{delta}
+        WHERE id IN
+        <foreach close=")" collection="couponIds" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+        AND issue <![CDATA[ <= ]]> total - pre_lock - #{delta}
+        AND status = 1
+    </update>
+
+    <update id="issuesPrelokcUpdate">
+        UPDATE coupon SET issue = issue + #{delta}, pre_lock = pre_lock - #{delta}
+        WHERE id IN
+        <foreach close=")" collection="couponIds" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+        AND pre_lock <![CDATA[ >= ]]> #{delta}
+        AND status = 1
+    </update>
+
+    <update id="preLockUpdate">
+        UPDATE coupon SET pre_lock = pre_lock + #{delta}
+        WHERE id IN
+        <foreach close=")" collection="couponIds" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+        AND pre_lock <![CDATA[ <= ]]> total - issue - #{delta}
+        AND status = 1
+    </update>
+
+    <update id="releasePrelock">
+        UPDATE coupon SET pre_lock = pre_lock - #{delta}
+        WHERE id IN
+        <foreach close=")" collection="couponIds" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+        AND pre_lock <![CDATA[ >= ]]> #{delta}
+        AND status = 1
+    </update>
+
+    <!--&amp;lt;update id="batchUpdate"&amp;gt;-->
+    <!--    UPDATE table-->
+    <!--    SET title = entity.title,-->
+    <!--    desc = entity.descr FROM-->
+    <!--    (VALUES-->
+    <!--    &amp;lt;foreach collection="list" item="item" separator=","&amp;gt;-->
+    <!--        (#{item.id}, #{item.title}, #{item.description})-->
+    <!--    &amp;lt;/foreach&amp;gt;-->
+    <!--    ) AS entity(id, title, descr) WHERE table.id = entity.id-->
+    <!--&amp;lt;/update&amp;gt;-->
+</mapper>

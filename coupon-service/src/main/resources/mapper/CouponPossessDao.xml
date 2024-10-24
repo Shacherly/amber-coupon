@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.CouponPossessDao">
+    <resultMap id="BaseResultMap" type="com.trading.backend.domain.CouponPossess">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="uid" jdbcType="VARCHAR" property="uid" />
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+        <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
+        <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+        <result column="possess_stage" jdbcType="INTEGER" property="possessStage" />
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+        <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+        <result column="has_read" jdbcType="BIT" property="hasRead" />
+        <result column="source" jdbcType="INTEGER" property="source" />
+        <result column="source_id" jdbcType="BIGINT" property="sourceId" />
+        <result column="expr_time" jdbcType="TIMESTAMP" property="exprTime" />
+        <result column="consume_time" jdbcType="TIMESTAMP" property="consumeTime" />
+        <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+        <result column="business_stage" jdbcType="INTEGER" property="businessStage" />
+        <result column="expt_end_time" jdbcType="TIMESTAMP" property="exptEndTime" />
+        <result column="actual_end_at" jdbcType="TIMESTAMP" property="actualEndAt" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+    </resultMap>
+
+    <resultMap id="PossessDO" type="com.trading.backend.pojo.PossessDO">
+        <result column="uid" jdbcType="VARCHAR" property="uid" />
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="possess_id" jdbcType="BIGINT" property="possessId"/>
+        <result column="title" jdbcType="VARCHAR" property="couponTitle"/>
+        <result column="descr" jdbcType="VARCHAR" property="couponDescr"/>
+        <result column="name" jdbcType="VARCHAR" property="couponName"/>
+        <result column="rule" jdbcType="OTHER" property="couponRule"/>
+        <result column="coupon_type" jdbcType="INTEGER" property="couponType"/>
+        <result column="apply_scene" jdbcType="INTEGER" property="applyScene"/>
+        <result column="worth" jdbcType="NUMERIC" property="worth" />
+        <result column="worth_coin" jdbcType="VARCHAR" property="worthCoin" />
+        <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+        <result column="possess_stage" jdbcType="INTEGER" property="possessStage"/>
+        <result column="business_stage" jdbcType="INTEGER" property="businessStage"/>
+        <result column="ctime" jdbcType="TIMESTAMP" property="receiveTime"/>
+        <result column="usable_time" jdbcType="TIMESTAMP" property="availableStart"/>
+        <result column="expr_time" jdbcType="TIMESTAMP" property="availableEnd"/>
+        <result column="consume_time" jdbcType="TIMESTAMP" property="consumeTime"/>
+        <result column="expt_end_time" jdbcType="TIMESTAMP" property="exptEndTime"/>
+        <result column="has_read" jdbcType="BIT" property="hasRead"/>
+        <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl" />
+    </resultMap>
+
+    <resultMap id="WorthGrantDO" type="com.trading.backend.pojo.WorthGrantDO">
+        <result column="possess_id" jdbcType="BIGINT" property="possessId"/>
+        <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+        <result column="expt_end_time" jdbcType="TIMESTAMP" property="exptEndTime"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid" />
+    </resultMap>
+
+    <resultMap id="CashActivDO" type="com.trading.backend.pojo.CashActivDO">
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="possess_id" jdbcType="BIGINT" property="possessId"/>
+        <result column="rule" jdbcType="OTHER" property="couponRule"/>
+        <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+        <result column="business_stage" jdbcType="INTEGER" property="businessStage"/>
+        <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+        <result column="expr_time" jdbcType="TIMESTAMP" property="exprTime" />
+    </resultMap>
+
+    <resultMap id="IssueDo" type="com.trading.backend.http.response.aceup.IssueListVo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="uid" jdbcType="VARCHAR" property="uid" />
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+        <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
+        <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+        <result column="business_stage" jdbcType="INTEGER" property="businessStage" />
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+        <result column="source" jdbcType="INTEGER" property="source" />
+        <result column="expr_time" jdbcType="TIMESTAMP" property="exprTime" />
+        <result column="consume_time" jdbcType="TIMESTAMP" property="consumeTime" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="coupon_name" jdbcType="VARCHAR" property="couponName" />
+        <result column="usable_time" jdbcType="TIMESTAMP" property="usableTime" />
+    </resultMap>
+
+    <resultMap id="ExpireDO" type="com.trading.backend.pojo.ExpireDO">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="expr_time" jdbcType="TIMESTAMP" property="exprTime"/>
+    </resultMap>
+
+
+    <sql id="Coupon_Column">
+        coupon.id coupon_id, title, name, descr, type, rule, worth, worth_coin, redirect_url
+    </sql>
+
+    <sql id="Possess_Column">
+        coupon_possess.id possess_id, usable_time, business_id, business_stage, coupon_possess.apply_scene,
+        coupon_possess.ctime, expr_time, coupon_possess.coupon_type,
+        consume_time, expt_end_time, has_read, possess_stage, uid
+    </sql>
+
+    <select id="getByPossessId" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.id = #{possessId}
+    </select>
+
+
+    <select id="getUserPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid} AND expr_time <![CDATA[ >= ]]> #{exprFrom}
+    </select>
+
+    <select id="getUserPossBySource" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid} AND coupon_possess.source = #{source}
+    </select>
+
+    <select id="getValidPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid} AND possess_stage = 0
+    </select>
+
+    <select id="getInvalidPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid} AND business_stage = 1
+        AND expr_time <![CDATA[ >= ]]> #{exprFrom}
+        UNION ALL
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid} AND possess_stage = 1 AND business_stage <![CDATA[ > ]]> 1
+        AND consume_time <![CDATA[ >= ]]> #{exprFrom}
+    </select>
+
+    <select id="getTypesPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE possess_stage = 0
+        AND coupon_possess.uid = #{uid}
+        AND coupon_type IN
+        <foreach collection="types" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getIdsPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.id IN
+        <foreach collection="possessIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        AND uid = #{uid}
+        AND possess_stage = 0
+    </select>
+
+
+    <select id="getAppyScenePossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE possess_stage = 0
+        AND business_stage = 0
+        AND coupon_possess.uid = #{uid}
+        AND coupon_possess.apply_scene = #{scene}
+    </select>
+
+    <select id="getAllAppyScenePossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.uid = #{uid}
+        AND coupon_possess.apply_scene = #{scene}
+    </select>
+
+    <select id="getOrderedPossessSingle" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE possess_stage = 0
+        AND business_stage = 0
+        AND coupon_possess.uid = #{uid}
+        AND coupon_possess.apply_scene = #{scene}
+        ORDER BY coupon.worth DESC, coupon_possess.expr_time LIMIT 1
+    </select>
+
+    <select id="getClubCoupons" resultMap="PossessDO">
+        SELECT id coupon_id, type coupon_type, worth, worth_coin
+        FROM coupon
+        WHERE coupon.id IN
+        <foreach collection="couponIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getClubPossess" resultMap="PossessDO">
+        SELECT id possess_id, coupon_id, business_stage, expr_time FROM coupon_possess WHERE coupon_id IN
+        <foreach collection="couponIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        AND uid = #{uid}
+        AND ctime BETWEEN #{monthStart} AND #{monthEnd}
+        AND possess_stage <![CDATA[ >= ]]> 0
+    </select>
+
+    <select id="getPeriodPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.coupon_id IN
+        <foreach collection="couponIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        AND coupon_possess.uid = #{uid}
+        AND coupon_possess.ctime BETWEEN #{begin} AND #{end}
+        AND coupon_possess.possess_stage = 0
+    </select>
+
+
+    <select id="getBwcPeriodPossess" resultMap="PossessDO">
+        SELECT<include refid="Coupon_Column"/>,
+        <include refid="Possess_Column"/>
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_possess.coupon_id IN
+        <foreach collection="couponIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        AND coupon_possess.uid = #{uid}
+        AND coupon_possess.ctime BETWEEN #{begin} AND #{end}
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO coupon_possess
+        (id,uid,coupon_id,coupon_type,apply_scene,possess_stage,business_stage,ctime,utime,has_read,source,source_id,expr_time,usable_time)
+        VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.id}, #{item.uid}, #{item.couponId}, #{item.couponType}, #{item.applyScene}, #{item.possessStage},#{item.businessStage},
+            #{item.ctime}, #{item.utime}, #{item.hasRead}, #{item.source}, #{item.sourceId}, #{item.exprTime}, #{item.usableTime})
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertWithoutId">
+        INSERT INTO coupon_possess
+        (uid,coupon_id,coupon_type,apply_scene,possess_stage,business_stage,has_read,source,source_id,expr_time,usable_time)
+        VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.uid}, #{item.couponId}, #{item.couponType}, #{item.applyScene}, #{item.possessStage},#{item.businessStage},
+            #{item.hasRead}, #{item.source}, #{item.sourceId}, #{item.exprTime}, #{item.usableTime})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate">
+        UPDATE coupon_possess
+        SET
+        consume_time = CAST(entity.consumeTime AS timestamp),
+        business_id = entity.businessId,
+        business_coin = entity.businessCoin,
+        business_stage = entity.businessStage,
+        expt_discount = entity.exptDiscount,
+        expt_end_time = CAST(entity.exptEndTime AS timestamp)
+        FROM (VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.id}, #{item.consumeTime}, #{item.businessId}, #{item.businessCoin}, #{item.businessStage}, #{item.exptEndTime}, #{item.exptDiscount})
+        </foreach>) AS entity(id, consumeTime, businessId, businessCoin, businessStage, exptEndTime, exptDiscount)
+        WHERE coupon_possess.id = entity.id
+    </update>
+
+    <select id="getWorthGrants" resultMap="WorthGrantDO">
+        SELECT expt_end_time, apply_scene, id possess_id, uid
+        FROM coupon_possess
+        WHERE business_stage = 2
+          AND coupon_type = #{couponType}
+          AND expt_end_time <![CDATA[ <= ]]> #{nowTimeOffset}
+        ORDER BY expt_end_time
+    </select>
+
+    <select id="getPendingCashActivDO" resultMap="CashActivDO">
+        SELECT coupon_possess.coupon_id,
+               coupon_possess.id possess_id,
+               coupon.rule,
+               coupon_possess.apply_scene,
+               coupon_possess.business_stage,
+               coupon_possess.business_id,
+               coupon_possess.expr_time
+        FROM coupon RIGHT OUTER JOIN coupon_possess ON coupon.id = coupon_possess.coupon_id
+        WHERE coupon_type = 5
+          AND possess_stage = 0
+          AND business_stage = 2
+          AND coupon_possess.apply_scene = 53
+          AND uid = #{param1}
+          AND business_id = #{param2}
+    </select>
+
+    <select id="getIssueList" resultMap="IssueDo">
+        select cp.*,c.name as coupon_name from coupon_possess cp left join coupon c on c.id = cp.coupon_id
+        <where>
+            <if test="id != null">
+                and cp.id = #{id}
+            </if>
+            <if test="uid != null and uid != ''">
+                and cp.uid = #{uid}
+            </if>
+            <if test="coupon_id != null">
+                and cp.coupon_id = #{coupon_id}
+            </if>
+            <if test="coupon_name != null and coupon_name != ''">
+                and c.name like concat('%',#{coupon_name},'%')
+            </if>
+            <if test="coupon_type != null">
+                and c.type = #{coupon_type}
+            </if>
+            <if test="source != null">
+                and cp.source = #{source}
+            </if>
+            <if test="apply_scene != null">
+                and cp.apply_scene = #{apply_scene}
+            </if>
+            <if test="business_stage != null">
+                and cp.business_stage = #{business_stage}
+            </if>
+            <if test="usable_time_begin != null">
+                and cp.usable_time >= to_timestamp(#{usable_time_begin}/1000)
+            </if>
+            <if test="usable_time_end != null">
+                and cp.usable_time  &lt;= to_timestamp(#{usable_time_end}/1000)
+            </if>
+            <if test="expr_time_begin != null">
+                and cp.expr_time >= to_timestamp(#{expr_time_begin}/1000)
+            </if>
+            <if test="expr_time_end != null">
+                and cp.expr_time  &lt;= to_timestamp(#{expr_time_end}/1000)
+            </if>
+            <if test="c_time_begin != null">
+                and cp.ctime >= to_timestamp(#{c_time_begin}/1000)
+            </if>
+            <if test="c_time_end != null">
+                and cp.ctime  &lt;= to_timestamp(#{c_time_end}/1000)
+            </if>
+            <if test="consume_time_begin != null">
+                and cp.consume_time > to_timestamp(#{consume_time_begin}/1000)
+            </if>
+            <if test="consume_time_end != null">
+                and cp.consume_time &lt;= to_timestamp(#{consume_time_end}/1000)
+            </if>
+            and cp.possess_stage >= 0
+        </where>
+    </select>
+
+    <select id="getExprs" resultMap="ExpireDO">
+        SELECT id, expr_time
+        FROM coupon_possess
+        WHERE possess_stage = 0
+          AND business_stage = 0
+          AND expr_time BETWEEN #{start} AND #{end}
+    </select>
+
+</mapper>

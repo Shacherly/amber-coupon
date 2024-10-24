@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.TempCouponRedeemMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.TempCouponRedeem">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="redeem_type" jdbcType="INTEGER" property="redeemType" />
+  </resultMap>
+</mapper>

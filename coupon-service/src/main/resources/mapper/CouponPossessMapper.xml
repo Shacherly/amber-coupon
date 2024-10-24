@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.CouponPossessMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.CouponPossess">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+    <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
+    <result column="apply_scene" jdbcType="INTEGER" property="applyScene" />
+    <result column="possess_stage" jdbcType="INTEGER" property="possessStage" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="has_read" jdbcType="BIT" property="hasRead" />
+    <result column="source" jdbcType="INTEGER" property="source" />
+    <result column="source_id" jdbcType="BIGINT" property="sourceId" />
+    <result column="expr_time" jdbcType="TIMESTAMP" property="exprTime" />
+    <result column="consume_time" jdbcType="TIMESTAMP" property="consumeTime" />
+    <result column="business_id" jdbcType="VARCHAR" property="businessId" />
+    <result column="business_stage" jdbcType="INTEGER" property="businessStage" />
+    <result column="expt_end_time" jdbcType="TIMESTAMP" property="exptEndTime" />
+    <result column="actual_end_at" jdbcType="TIMESTAMP" property="actualEndAt" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="usable_time" jdbcType="TIMESTAMP" property="usableTime" />
+    <result column="business_coin" jdbcType="VARCHAR" property="businessCoin" />
+    <result column="expt_discount" jdbcType="NUMERIC" property="exptDiscount" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.CouponEventMapper">
+    <resultMap id="BaseResultMap" type="com.trading.backend.domain.CouponEvent">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="coupon_ids" jdbcType="VARCHAR" property="couponIds"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="descr" jdbcType="VARCHAR" property="descr"/>
+        <result column="event_stage" jdbcType="INTEGER" property="eventStage"/>
+        <result column="approval_event" jdbcType="BIT" property="approvalEvent"/>
+        <result column="approval_stage" jdbcType="INTEGER" property="approvalStage"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime"/>
+        <result column="utime" jdbcType="TIMESTAMP" property="utime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="object_type" jdbcType="VARCHAR" property="objectType"/>
+        <result column="object_attaches" jdbcType="VARCHAR" property="objectAttaches"/>
+        <result column="result_phase" jdbcType="VARCHAR" property="resultPhase"/>
+    </resultMap>
+    <insert id="batchInsert">
+        INSERT INTO coupon_event
+        (id,coupon_ids,type,name,descr,event_stage,approval_event,approval_stage,start_time,end_time,ctime,utime,remark,object_type)
+        VALUES
+        <foreach collection="records" item="item" separator=",">
+            (#{item.id}, #{item.couponIds}, #{item.type}, #{item.name}, #{item.descr}, #{item.eventStage},
+            #{item.approvalEvent}, #{item.approvalStage}, #{item.startTime}, #{item.endTime}, #{item.ctime}, #{item.utime}, #{item.remark}, #{item.objectType})
+        </foreach>
+    </insert>
+</mapper>

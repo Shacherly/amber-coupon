@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.trading.backend.common.cache.RedisConfigurer,\
+  com.trading.backend.common.cache.RedisService
+
+  

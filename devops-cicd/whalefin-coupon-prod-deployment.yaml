@@ -1,0 +1,150 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: <IMAGE_NAMESPACE>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '8020'
+    prometheus.io/path: '/coupon/actuator/prometheus'
+  name: trading-coupon-svc
+  namespace: <IMAGE_NAMESPACE>
+spec:
+  ports:
+  - name: coupon
+    port: 8010
+    protocol: TCP
+    targetPort: 8010
+  - name: monitor
+    port: 8020
+    protocol: TCP
+    targetPort: 8020
+  - name: xxljob
+    port: 9999
+    protocol: TCP
+    targetPort: 9999
+  selector:
+    app: trading-coupon
+  type: ClusterIP                      #clusterip删除重建service也会变。别的业务调用可以使用service dns名
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: trading-coupon
+  name: trading-coupon
+  namespace: <IMAGE_NAMESPACE>
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate #can be "Recreate" or "RollingUpdate". "RollingUpdate" is the default value
+  selector:
+    matchLabels:
+      app: trading-coupon
+  template:
+    metadata:
+      labels:
+        app: trading-coupon
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: eks.amazonaws.com/nodegroup
+                operator: In
+                values:
+                - <NODE_AFFINITY_VALUES>
+      containers:
+      - name: coupon
+        image: 933277528084.dkr.ecr.ap-northeast-1.amazonaws.com/<IMAGE_NAME>:<IMAGE_TAG>
+        env:
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: KAFKA_OPTS
+          value: "-Djava.security.auth.login.config=/home/devops/users_jaas.conf"
+        - name: APP_ENV
+          value: <DOCKER_ENTRYPOINT_ENV>
+        - name: JVM_OPTIONS
+          value: "-Xms2g -Xmx2g -Xss512k -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=512M -XX:+UseG1GC"
+        - name: JAVAAGENT_OPTIONS
+          value: "-javaagent:/home/devops/agent/skywalking-agent.jar -Dskywalking.agent.service_name=trading-coupon-<DOCKER_ENTRYPOINT_ENV> -Dskywalking.collector.backend_service=skywalking-prod-oap.tradingainsider.com:11800"
+        - name: trading_KMS_ACCESS
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_KMS_ACCESS
+        - name: trading_KMS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_KMS_SECRET
+        - name: trading_CONFCENTER_APP_APPNAME
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_CONFCENTER_APP_APPNAME
+        - name: trading_CONFCENTER_ETCD_ENDPOINTS
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_CONFCENTER_ETCD_ENDPOINTS
+        - name: trading_CONFCENTER_ETCD_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_CONFCENTER_ETCD_USERNAME
+        - name: trading_CONFCENTER_ETCD_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: trading-coupon-<BRANCH_NAME>
+              key: trading_CONFCENTER_ETCD_PASSWORD
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsNonRoot: true      #just for initContainers，default is true
+          privileged: false  # Don't allow privileged pods!
+          runAsUser: 1000
+          runAsGroup: 1000
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "echo \"MY_POD_IP:${MY_POD_IP},APP_ENV:${APP_ENV}\""] 
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","echo 'preStop:优雅关闭';sleep 15"] 
+        resources:
+          requests:
+            memory: "2048Mi"
+            cpu: "2"      #250m等同于0.25  
+          limits:
+            memory: "3048Mi"
+            cpu: "2"
+        ports:
+        - containerPort: 8010
+          name: coupon
+          protocol: TCP
+        - containerPort: 9999
+          name: xxljob
+          protocol: TCP
+        - containerPort: 8020
+          name: monitor
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /coupon/actuator/health
+            port: 8020
+          initialDelaySeconds: 90
+          periodSeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /coupon/actuator/health
+            port: 8020
+          initialDelaySeconds: 90
+          periodSeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 100

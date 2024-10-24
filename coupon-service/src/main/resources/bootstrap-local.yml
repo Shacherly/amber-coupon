@@ -1,0 +1,113 @@
+trading:
+  confcenter:
+    enabled: true
+
+server:
+  port: 10009
+  shutdown: graceful
+  servlet:
+    context-path: /coupon
+  tomcat:
+    accept-count: 100
+    max-connections: 8192
+    threads:
+      max: 200
+      min-spare: 10
+
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-jp-trading-allmodule-pg-nonprod.ckcvjkzxh8bd.ap-northeast-1.rds.amazonaws.com:5432/coupon_dev?prepareThreshold=0
+    username: coupon_readwrite_dev
+#    password: DHxJFGnIMP8e&I87HMZya
+    driver-class-name: org.postgresql.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      max-active: 10
+      max-wait: 5000
+      min-idle: 5
+
+  redis:
+    host: master.aws-jp-trading-allmodule-redis-nonprod2.8loycm.apne1.cache.amazonaws.com
+    port: 6379
+    password: eMIuCk#RykeeQ9Xc)UWC50
+    lettuce:
+      pool:
+        min-idle: 0
+        max-active: 8
+        max-idle: 8
+        max-wait: 5
+        time-between-eviction-runs: 60000
+    database: 9
+    timeout: 5000
+
+  kafka:
+    bootstrap-servers: kafka001:9092,kafka002:9092,kafka003:9092
+    consumer:
+      group-id: trading-trading-coupon
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 0
+#    properties:
+#      security.protocol: SASL_SSL
+#      sasl.mechanism: SCRAM-SHA-512
+#      ssl.truststore.location: D:/Projects/trading/kafka.client.truststore.jks
+
+
+mybatis:
+  configuration:
+    cache-enabled: false
+  type-handlers-package: com.trading.backend.coupon.common.type
+  mapper-locations: classpath:mapper/*.xml
+mapper:
+  mappers: com.trading.backend.common.mapper.BaseMapper
+pagehelper:
+  default-count: true
+
+#xxl-job配置
+xxl:
+  job.admin.addresses: https://xxljob-admin-dev.tradingainsider.com/xxl-job-admin/
+  job.accessToken:
+  job.executor:
+    appname: coupon-dev
+    address:
+    ip: coupon-svc.trading-dev.svc
+    port: 9999
+    logpath: /home/devops/trading-coupon/log/xxl-job/
+    logretentiondays: 30
+
+logging:
+  config: classpath:log/log4j2-local.xml
+
+management:
+  server: #prometheus单独端口监控
+    port: 8070
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+remote-call:
+  domain: 'https://internal-gateway-dev.tradingainsider.com'
+  aceup:
+    domain: 'https://aceup-dev.tradingainsider.com'
+    key: 'trading'
+    secret: '849299c172eb5c1da8c772c1bc89dd045499d450'
+    token-url: 'https://aceup-dev.tradingainsider.com/server/auth/oauth/token'
+
+grant-task-property:
+  # 毫秒值
+  grants-scan: 10000000
+  grants-take: 1000000
+
+coupon-alarm:
+  url: 'https://alarm.tradingainsider.com/server/alarm_server/alarm_manager?method=on_alarm'
+  quantity-remain:
+    name: 'dev优惠券消耗数量告警'
+  grant-celling1:
+    name: 'dev资产券奖励发放每日上限告警'
+  grant-celling2:
+    name: 'dev资产券奖励发放暂停告警'

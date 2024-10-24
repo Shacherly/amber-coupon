@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.losermapper.PfDeductCouponRuleMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.PfDeductCouponRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_coin" jdbcType="VARCHAR" property="applyCoin" />
+    <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+    <result column="deduct_rate" jdbcType="NUMERIC" property="deductRate" />
+    <result column="activate_condition" jdbcType="INTEGER" property="activateCondition" />
+    <result column="max_loan_amount" jdbcType="NUMERIC" property="maxLoanAmount" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
+    <result column="updated_time" jdbcType="BIGINT" property="updatedTime" />
+    <result column="max_loan_days" jdbcType="INTEGER" property="maxLoanDays" />
+    <result column="loan_type" jdbcType="INTEGER" property="loanType" />
+    <result column="min_loan_days" jdbcType="INTEGER" property="minLoanDays" />
+    <result column="deduct_way" jdbcType="INTEGER" property="deductWay" />
+    <result column="deduct_days" jdbcType="INTEGER" property="deductDays" />
+    <result column="min_loan_amount" jdbcType="NUMERIC" property="minLoanAmount" />
+  </resultMap>
+</mapper>

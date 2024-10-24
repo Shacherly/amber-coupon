@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.losermapper.PfCouponMapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.PfCoupon">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="over_lay" jdbcType="BIT" property="overLay" />
+    <result column="total" jdbcType="BIGINT" property="total" />
+    <result column="released" jdbcType="BIGINT" property="released" />
+    <result column="used" jdbcType="BIGINT" property="used" />
+    <result column="limit_per_people" jdbcType="BIGINT" property="limitPerPeople" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
+    <result column="updated_time" jdbcType="BIGINT" property="updatedTime" />
+    <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl" />
+    <result column="expire_type" jdbcType="INTEGER" property="expireType" />
+    <result column="expire_days" jdbcType="INTEGER" property="expireDays" />
+    <result column="expire_at_start" jdbcType="BIGINT" property="expireAtStart" />
+    <result column="expire_at_end" jdbcType="BIGINT" property="expireAtEnd" />
+    <result column="locked" jdbcType="BIGINT" property="locked" />
+  </resultMap>
+</mapper>

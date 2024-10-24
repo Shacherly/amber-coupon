@@ -1,0 +1,140 @@
+### 配置中心 配置 start
+trading:
+  confcenter:
+    enabled: true
+    app:
+      appName: trading-coupon
+
+server:
+  port: 8010
+  shutdown: graceful
+  servlet:
+    context-path: /coupon
+  tomcat:
+    accept-count: 100
+    max-connections: 8192
+    threads:
+      max: 200
+      min-spare: 10
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      max-active: 10
+      max-wait: 5000
+      min-idle: 5
+    # trading数据源
+    primary:
+      url: jdbc:postgresql://jp-trading-coupon-pg-prod.cluster-ckcvjkzxh8bd.ap-northeast-1.rds.amazonaws.com:1433/coupon?prepareThreshold=0
+      username: readwrite
+      password: yfBeGWQsH5OHq0OlS
+      driver-class-name: org.postgresql.Driver
+    # trading数据源
+    trading-source:
+      url: jdbc:postgresql://pgm-0iwr7280339e7i8m75650.pgsql.japan.rds.aliyuncs.com:5432/trading?prepareThreshold=0
+      username: readtrading
+      password: sd7TGtsd_sdYG6f7HtG
+      driver-class-name: org.postgresql.Driver
+
+  redis:
+#    host: master.aws-jp-trading-coupon-redis-prod.8loycm.apne1.cache.amazonaws.com
+    host: master.aws-jp-trading-coupon-redis-prod.8loycm.apne1.cache.amazonaws.com
+    port: 6379
+    password: pxWmgJlD7Vih0WMYJYr08m
+    ssl: true
+    lettuce:
+      pool:
+        min-idle: 0
+        max-active: 8
+        max-idle: 8
+        max-wait: 5
+        time-between-eviction-runs: 60000
+    database: 0
+    timeout: 5000
+
+  kafka:
+    bootstrap-servers: b-1.trading-prod-kaf.i6c4mm.c2.kafka.ap-northeast-1.amazonaws.com:9096,b-3.trading-prod-kaf.i6c4mm.c2.kafka.ap-northeast-1.amazonaws.com:9096,b-2.trading-prod-kaf.i6c4mm.c2.kafka.ap-northeast-1.amazonaws.com:9096
+    consumer:
+      group-id: trading-trading-coupon-prod
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 0
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: SCRAM-SHA-512
+      ssl.truststore.location: /home/devops/ssl/kafka.client.truststore.jks
+
+mybatis:
+  configuration:
+    cache-enabled: false
+  type-handlers-package: com.trading.backend.coupon.common.type
+  mapper-locations: classpath:mapper/*.xml
+mapper:
+  mappers: com.trading.backend.common.mapper.BaseMapper
+pagehelper:
+  default-count: true
+
+logging:
+  config: classpath:log/log4j2-prod.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+
+#xxl-job配置
+xxl:
+  job.admin.addresses: http://trading-xxl-job-admin.trading.svc:8080/xxl-job-admin
+  job.accessToken: SAewvZhn7e7fFNjG4j
+  job.executor:
+    appname: coupon-prod
+    address:
+    ip: trading-coupon-svc.trading.svc
+    port: 9999
+    logpath: /home/devops/trading-coupon/log/xxl-job/
+    logretentiondays: 30
+
+topics:
+  registry: trading-trading-coupon-registry-prod
+  kyc: trading-trading-coupon-kyc-prod
+  deposit: trading-trading-wallet-transaction-prod
+  purchase: trading-trading-buycrypto-push-balance-prod
+  earn: trading-trading-coupon-earn-prod
+  valid-novice: trading-trading-coupon-validuser-prod
+
+remote-call:
+  domain: 'http://trading.gateway.svc'
+  aceup:
+    domain: 'https://aceup.tradingainsider.com'
+    key: 'trading'
+    secret: '7868338b883a49c58a8c0b16708ee4808265209b'
+    token-url: 'https://aceup.tradingainsider.com/server/auth/oauth/token'
+
+# 新手活动时间配置
+novice-property:
+  regist-coupon: '-1,-2,-3'
+  old-regist-coupon: '62,66,67'
+  start-time: '2021-10-27T00:00:00'
+  end-time: '2021-12-31T23:59:59'
+
+# 毫秒值
+coupon-task-property:
+  # 控制待发放扫描的粒度
+  grants-scan: 600000
+  # 控制奖励发放获取粒度
+  grants-take: 60000
+  grants-daily-limit1: 1
+  grants-daily-limit2: 2
+  grants-coin: 'BTC'
+  exprs-scan: 600000
+
+
+dual-trial.id: 198

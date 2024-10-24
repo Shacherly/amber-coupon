@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="PgSql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value=""/>
+        <property name="endingDelimiter" value=""/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
+        <!--<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>-->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.trading.backend.common.mapper.BaseMapper"/>
+            <!--<property name="useMapperCommentGenerator" value="false"/>-->
+            <property name="lombok" value="Data,Accessors"/>
+        </plugin>
+        <plugin type="com.trading.backend.common.plugin.SlefModelPlugin">
+            <property name="useKeySql" value="true"/>
+            <property name="seq_prefix" value="SEQ_"/>
+            <property name="seq_suffix" value=""/>
+            <!--<property name="superInterfaces" value="base.domain.com.trading.backend.CouponMultiLocaliable,base.domain.com.trading.backend.CouponAdaptable"/>-->
+        </plugin>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection
+                driverClass="org.postgresql.Driver"
+                connectionURL="jdbc:postgresql://aws-jp-trading-allmodule-pg-nonprod.ckcvjkzxh8bd.ap-northeast-1.rds.amazonaws.com:5432/coupon_dev"
+                userId="coupon_readwrite_dev"
+                password="DHxJFGnIMP8e&amp;I87HMZya"/>
+        <javaTypeResolver type="com.trading.backend.common.type.SelfTypeResolver">
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="com.trading.backend.coupon.domain" targetProject="src/main/java">
+            <property name="rootClass" value="com.trading.backend.common.domain.BaseEntity"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <javaClientGenerator targetPackage="com.trading.backend.coupon.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
+
+        <table tableName="coupon_descr_template">
+            <!--<generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+        </table>
+    </context>
+</generatorConfiguration>

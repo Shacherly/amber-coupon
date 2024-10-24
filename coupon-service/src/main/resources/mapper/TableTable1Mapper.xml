@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.backend.mapper.TableTable1Mapper">
+  <resultMap id="BaseResultMap" type="com.trading.backend.domain.TableTable1">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="now_time" jdbcType="TIMESTAMP" property="nowTime" />
+    <result column="test_name" jdbcType="VARCHAR" property="testName" />
+  </resultMap>
+    <select id="selectOne1" resultType="java.lang.Integer">
+      select * from table_table1 limit 1
+    </select>
+</mapper>
